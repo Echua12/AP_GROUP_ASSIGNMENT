@@ -119,8 +119,7 @@ public final class App extends Application {
      * environment variable. Returns {@code null} (RAG tab disabled) if no key is configured.
      */
     private LlmClient buildLlmClient() {
-        String provider = firstNonBlank(System.getProperty("llm.provider"),
-                System.getenv("LLM_PROVIDER"), DEFAULT_PROVIDER).toLowerCase();
+        String provider = firstNonBlank(DEFAULT_PROVIDER).toLowerCase(); //KEITH's EDIT: Just stopping it from accessing anything else but GEMINI
         int maxTokens = 1024;
 
         switch (provider) {
