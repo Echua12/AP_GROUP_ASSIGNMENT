@@ -47,6 +47,7 @@ if %errorLevel% neq 0 (
 
 echo Starting JavaFX Client...
 echo ------------------------------------------------
+call set GEMINI_API_KEY=AQ.Ab8RN6JTMIIX-YMp7So-LgV-lqf12uixNqOZ7pXAxHVmyjz4pg
 call mvn compile javafx:run
 
 echo.
