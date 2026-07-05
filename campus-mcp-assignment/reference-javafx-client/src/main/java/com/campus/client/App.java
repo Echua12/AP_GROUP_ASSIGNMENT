@@ -41,7 +41,7 @@ public final class App extends Application {
         Remember to set the <PROVIDER>_API_Key value in your environment variable.
         Warning: DO NOT store API_Keys in your source code!
     **/
-    private static final String DEFAULT_PROVIDER = "gemini"; //anthropic  //openai
+    private static final String DEFAULT_PROVIDER = "google"; //anthropic  //openai
 
     private CampusMcpClient mcp;
     private MainView view;

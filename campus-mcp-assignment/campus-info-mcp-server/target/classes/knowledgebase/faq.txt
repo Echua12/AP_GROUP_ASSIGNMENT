@@ -1,8 +1,5 @@
 := FREQUENTLY ASKED QUESTIONS =:
 
-Q: How far in advance can I book a discussion room?
-A: Bookings open 14 days in advance. You can hold at most 3 active bookings.
-
 Q: What happens if I am late to my booking?
 A: If you do not check in within 15 minutes of the start time, the booking is
 released automatically and made available to other students.

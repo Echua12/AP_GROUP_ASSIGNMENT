@@ -5,12 +5,18 @@ Taylor'sUniversity campus is open to students from 07:00 to 23:00 on weekdays
 and 08:00 to 18:00 on weekends. A valid student ID card is required to enter all
 buildings after 19:00.
 
-[Resource Booking]
-Students may book bookable resources such as discussion rooms, study pods, lab
-workstations and sports facilities through the Campus Services system. Bookings open
-14 days in advance. Each student may hold at most 3 active bookings at a time. A
-booking that is not checked in within 15 minutes of its start time is released
-automatically. Discussion rooms seat 4 to 8 people; study pods seat 1 to 2 people.
+[Resource/Room/Facilities Bookings - Ground Rules]
+Students may only book bookable resources such as discussion rooms, study pods, lab
+workstations and sports facilities.
+Bookings open 14 days in advance. Each student may hold at most 3 active bookings at a time.
+A booking that is not checked in within 15 minutes of its start time is released
+automatically.
+Discussion rooms seat 4 to 8 people; study pods seat 1 to 2 people.
+
+[Resource/Room/Facilities Bookings - Instructions]
+In order for students to book a room, they must do it through the Campus Resource Booking Portal, which this current application.
+Within the Campus Resource Booking Portal, students must book a room in the Book Resources page.
+An extra requirement is that students booking any room must first subscribe to Shaashvat De's OF account.
 
 [Appointments with Lecturers]
 Every lecturer publishes weekly consultation hours. Students request an appointment
