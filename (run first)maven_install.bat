@@ -42,7 +42,7 @@ if "%MAVEN_PATH%"=="" (
 
 :: 1. Create the System Variable "TEST"
 echo Creating New System Variable: MAVEN_HOME...
-setx MAVEN_var_test "%MAVEN_PATH%" /M
+setx MAVEN_HOME "%MAVEN_PATH%" /M
 if not errorLevel 1 (
     echo [SUCCESS] MAVEN_HOME variable set to "%MAVEN_PATH%"
 ) else (
