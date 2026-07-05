@@ -1,2 +1,0 @@
-SP-B2,Basketball Court,0395181,2026-07-05,10 am,12 pm
-E7.02,Group Study Room,0395181,2026-07-05,9 am,11 am
