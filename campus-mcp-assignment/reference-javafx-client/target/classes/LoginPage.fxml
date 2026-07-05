@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox minHeight="600.0" minWidth="800.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.campus.client.ui.LoginPageController">
+   <children>
+      <VBox alignment="CENTER" spacing="25.0" HBox.hgrow="ALWAYS">
+         <children>
+            <Label alignment="TOP_CENTER" prefHeight="62.0" prefWidth="511.0" text="Welcome, to Taylor's Resource Booking Assistant">
+               <font>
+                  <Font size="22.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="99.0" prefWidth="615.0" spacing="50.0">
+               <children>
+                  <VBox prefHeight="100.0" prefWidth="28.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="120.0" text="Enter Student ID:" />
+                        <Label alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="0.0" text="Enter Student Password:">
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="0.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TextField id="studentIdInput" fx:id="studentIdInput" maxWidth="225.0" prefHeight="26.0" prefWidth="225.0" />
+                        <TextField id="studentPasswordInput" fx:id="studentPasswordInput" maxWidth="226.0" minWidth="100.0" prefHeight="26.0" prefWidth="225.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Label fx:id="errorLabel" text=" " textFill="RED" />
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginClick" text="Log in" />
+            <VBox alignment="CENTER" prefHeight="163.0" prefWidth="615.0">
+               <children>
+                  <Label text="If you have forgotten your Student Account ID or Student Account Password, please contact campus central via" textFill="#5797ff" />
+                  <Label text="Phone Number: +6010-420-6780" textFill="#5797ff" />
+                  <Label text="Email: campuscentral@taylors.edu.my" textFill="#5797ff" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</HBox>
