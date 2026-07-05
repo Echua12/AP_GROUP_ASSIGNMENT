@@ -1,5 +1,7 @@
 package com.campus.client.ui;
 
+import com.campus.client.App;
+
 import java.util.*;
 import java.io.*;
 
@@ -43,7 +45,7 @@ public class LoginPageController {
         */
         
         if (verifyLogin()) {
-            App.switchMainScreensOnButtonPress((Button)event.getSource());
+//            App.switchMainScreensOnButtonPress((Button)event.getSource());
         }
         
     }

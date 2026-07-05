@@ -16,12 +16,20 @@
         demonstrates RAG. Students extend this into their chosen campus application.</description>
 
     <dependencies>
+        <!-- Simple JavaFX module -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
-
+        
+        <!-- FXML JavaFX module -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        
         <!-- MCP SDK: client + HTTP/SSE client transport -->
         <dependency>
             <groupId>io.modelcontextprotocol.sdk</groupId>
