@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
+import com.campus.client.mcp.CampusMcpClient;
+
 //unsure if i need these :(
 //import java.net.URL;
 //import java.util.ResourceBundle;
@@ -21,6 +23,8 @@ import javafx.scene.layout.*;
  * @author User
  */
 public class LoginPageController {
+    private static CampusMcpClient mcp;
+    
     @FXML
     TextField studentIdInput, studentPasswordInput;
     @FXML
@@ -92,6 +96,13 @@ public class LoginPageController {
         return false;
     }
     
+    /**
+     * Simply gets the reference of the mcp (after connection during runtime)
+     * 
+     */
+    public static void bind(CampusMcpClient mcp) {
+        LoginPageController.mcp = mcp;
+    }
     
     
 }

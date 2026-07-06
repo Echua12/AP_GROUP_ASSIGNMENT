@@ -186,7 +186,7 @@ public final class MainView {
     }
 
     // ---- behaviour -------------------------------------------------------
-
+    // links all the MainView's button's to their event handlers
     private void wire() {
         askButton.setOnAction(e -> {
             String q = questionField.getText().trim();

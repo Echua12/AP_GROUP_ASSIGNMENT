@@ -22,15 +22,23 @@ public final class CampusPrompts {
         return List.of(campusAssistant(), draftLeaveRequest());
     }
 
-    /** A system-style framing prompt that turns the model into a grounded campus assistant. */
-    private SyncPromptSpecification campusAssistant() {
-        Prompt prompt = new Prompt(
-                "campus_assistant",
-                "Framing instructions for a campus services assistant that must stay grounded in retrieved context.",
-                List.of(new PromptArgument("topic", "The area the student is asking about "
-                        + "(booking, appointments, leave, library, general).", false)));
+    /** A system-style framing prompt that turns the model into a grounded campus assistant. 
+     *
+     *  For the text part, it expects an optional "topic" alllllll the way from the RagService's ask's "getPrompt" to "augment"
+     *  the "text" variable, the "text" variable will then act as the system prompt as the grounding context for the LLM API when providing an answer
+     * 
+     * 
+     * 
+     */
+    
+    private SyncPromptSpecification campusAssistant() {                                                                //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+        Prompt prompt = new Prompt(                                                                                    //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                "campus_assistant",                                                                                     //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                "Framing instructions for a campus services assistant that must stay grounded in retrieved context.",   //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                List.of(new PromptArgument("topic", "The area the student is asking about "                             //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                        + "(booking, appointments, leave, library, general).", false)));                                //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
 
-        return new SyncPromptSpecification(prompt, (exchange, request) -> {
+        return new SyncPromptSpecification(prompt, (exchange, request) -> { 
             String topic = arg(request.arguments(), "topic", "general campus services");
             String text = """
                 You are the Taylor's University campus assistant. Answer student questions about
@@ -46,15 +54,15 @@ public final class CampusPrompts {
 
     /** A template that asks the model to draft a polite leave-request message. */
     private SyncPromptSpecification draftLeaveRequest() {
-        Prompt prompt = new Prompt(
-                "draft_leave_request",
-                "Produces a polite, well-structured leave-request message for a student.",
-                List.of(
-                        new PromptArgument("studentName", "Student's full name", true),
-                        new PromptArgument("fromDate", "Leave start date", true),
-                        new PromptArgument("toDate", "Leave end date", true),
-                        new PromptArgument("reason", "Reason for leave", true)));
-
+        Prompt prompt = new Prompt(                                                         //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                "draft_leave_request",                                                       //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                "Produces a polite, well-structured leave-request message for a student.",   //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                List.of(                                                                     //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                        new PromptArgument("studentName", "Student's full name", true),      //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                        new PromptArgument("fromDate", "Leave start date", true),            //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                        new PromptArgument("toDate", "Leave end date", true),                //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                        new PromptArgument("reason", "Reason for leave", true)));            //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
+                                                                                             //ignore all this, YOU ARE NOT GOOD ENOUGH FOR IT
         return new SyncPromptSpecification(prompt, (exchange, request) -> {
             Map<String, Object> a = request.arguments();
             String text = """
