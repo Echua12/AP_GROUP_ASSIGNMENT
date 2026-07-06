@@ -27,19 +27,26 @@ public final class DataStore {
     private final Path dataDir;
     private final Path bookingsFile;
     private final Path leaveFile;
+    private final Path studentsFile;
     private final AtomicInteger bookingSeq = new AtomicInteger(0);
     private final AtomicInteger leaveSeq = new AtomicInteger(0);
-
+    private final AtomicInteger studentsSeq = new AtomicInteger(0);
+    
     public DataStore(Path dataDir) {
         this.dataDir = dataDir;
         this.bookingsFile = dataDir.resolve("bookings.txt");
         this.leaveFile = dataDir.resolve("leave_applications.txt");
+        this.studentsFile = dataDir.resolve("students.txt"); //the students' login information
         init();
     }
 
     private void init() {
         try {
             Files.createDirectories(dataDir);
+            /**
+             *  Create your file-data structure here
+             *  
+             **/
             if (Files.notExists(bookingsFile)) {
                 Files.writeString(bookingsFile,
                         "# ref | resourceId | date | start | end | studentId | createdAt\n");
@@ -48,9 +55,15 @@ public final class DataStore {
                 Files.writeString(leaveFile,
                         "# ref | studentId | fromDate | toDate | reason | createdAt\n");
             }
+            if(Files.notExists(studentsFile)) {
+                Files.writeString(studentsFile,
+                        "# ref | studentId | studentPassword | studentFName | studentMName | studentLName\n");
+            }
+            
             // Seed sequence numbers from existing line counts so refs stay unique across restarts.
             bookingSeq.set(countDataLines(bookingsFile));
             leaveSeq.set(countDataLines(leaveFile));
+            studentsSeq.set(countDataLines(studentsFile));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -112,7 +125,10 @@ public final class DataStore {
             throw new UncheckedIOException(e);
         }
     }
-
+    
+    /**
+     *  A helper method in creating a file
+     */
     private int countDataLines(Path file) {
         return readDataLines(file).size();
     }
