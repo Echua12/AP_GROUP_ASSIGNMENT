@@ -63,6 +63,11 @@ public final class App extends Application {
 
     @Override
     public void start(Stage stage) {
+        /* Establish connection BEFORE allowing the first controller class to be initialised */
+        Thread t = new Thread(this::bootstrap, "mcp-bootstrap"); //!!!ABSOLUTELY NECESSARY, bootstrap is a param-less 
+        t.setDaemon(true);
+        t.start();
+        
         stage.setMinHeight(600);
         stage.setMinWidth(800);
         stage.setTitle("Campus MCP Reference Client");
@@ -74,10 +79,6 @@ public final class App extends Application {
         }
         stage.setScene(rootScene);
         stage.show();
-
-        Thread t = new Thread(this::bootstrap, "mcp-bootstrap"); //!!!ABSOLUTELY NECESSARY, bootstrap is a param-less 
-        t.setDaemon(true);
-        t.start();
     }
     
     static void setRoot(String fxml) {
@@ -152,15 +153,7 @@ public final class App extends Application {
                 throw campusServerConnectionException;
             }
             
-//            Platform.runLater(() -> {
-//                //put the UI code in Platform.runLater(), Platform.runLater() basically returns that thread to the main javafx thread, not the Executor worker thread
-//                 view.setStatus("Connecting to MCP server at " + url + " …");
-//                 System.out.println("Connecting to MCP server at " + url );
-//            });
-
-            // The LLM is optional: discovery and direct tool calls work without an API key.
-            // RagService_old rag = null;
-            // String llmNote;
+            
             
             try {
                 /**
