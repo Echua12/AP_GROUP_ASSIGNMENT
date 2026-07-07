@@ -62,6 +62,8 @@ public class LoginPageController implements Initializable {
          * 
          */
         
+        
+        
         /**
          *  Setting Login Button's action, will contain the entirety of the input validation and 
          *  the getting of the student data, as well as the password and id matching (student account verification)
@@ -112,8 +114,11 @@ public class LoginPageController implements Initializable {
                 return thread;
             });
             
+            /* The entirety of the verification process will occur here (within the daemon) */
             studentDataStoreWorker.submit(() -> {
                 try { //try-catch statement in the case that something in the mcp fails midway through
+                    
+                } catch () {
                     
                 }
             })
