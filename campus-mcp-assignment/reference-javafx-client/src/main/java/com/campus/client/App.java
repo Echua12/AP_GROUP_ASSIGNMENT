@@ -6,6 +6,7 @@ import com.campus.client.llm.LlmClient;
 import com.campus.client.llm.OpenAiClient;
 import com.campus.client.mcp.CampusMcpClient;
 import com.campus.client.rag.RagService;
+import com.campus.client.ui.LoginPageController;
 //import com.campus.client.rag.RagService_old;
 import com.campus.client.ui.MainView;
 import javafx.application.Application;
@@ -146,6 +147,7 @@ public final class App extends Application {
                 //do any server reading here, assuming that it hasn't failed up to this point
                 //
             } catch (Exception campusServerConnectionException) {
+                /* If an Exception is thrown, it means that the client failed to connect with the server */
                 mcp = null;
                 throw campusServerConnectionException;
             }
@@ -175,38 +177,21 @@ public final class App extends Application {
                 throw llmConnectionException;
             }
             
-            final RagService rag = (llm == null) ? null : new RagService(mcp, llm); //!!! ABSOLUTELY NECESSARY, interface to call "ask" to get an answer from the LLM (underneath, it calls the llm.complete(...) method to get an AI generated response)
+            final RagService rag = (llm == null && mcp == null) ? null : new RagService(mcp, llm); //!!! ABSOLUTELY NECESSARY, interface to call "ask" to get an answer from the LLM (underneath, it calls the llm.complete(...) method to get an AI generated response)
             
-
-//            String llmNote = (llm == null) //not important, mostly for the MainView's label
-//                    ? "LLM: disabled (set <PROVIDER>_API_KEY to enable the RAG tab)"
-//                    : "LLM: " + llm.model();
-
-            /* String apiKey = firstNonBlank(System.getProperty("anthropic.apiKey"),
-                    System.getenv("ANTHROPIC_API_KEY"), null);
-
-            if (apiKey != null) {
-                String model = firstNonBlank(System.getProperty("anthropic.model"), DEFAULT_MODEL);
-                rag = new RagService_old(mcp, new AnthropicClient(apiKey, model, 1024));
-                llmNote = "LLM: " + model;
-            } else {
-                llmNote = "LLM: disabled (set ANTHROPIC_API_KEY to enable the RAG tab)";
-            }
-            final RagService_old ragFinal = rag;
-            */
-
-//            Platform.runLater(() -> {
-//                //put the UI code in Platform.runLater()
-//                view.bind(mcp, ragFinal); //basically gives the MainView the references of the "mcp" and "rag" objects
-////                view.setStatus("Connected to '" + init.serverInfo().name() + "'.  " + llmNote); //optional, only for MainView's label text setting
-////                view.refreshDiscovery(); //optional, only to list out the listTools, listResources, listPrompts, etc from the server, only for MainView
-//            });
+            /**
+             * THIS AREA WILL BE DEDICATED TO BINDING THE MCP AND RAG SERVICES TO ALL THE CONTROLLER CLASSES
+             * 
+             */
+            LoginPageController.bind(mcp);
+            
+            
+            
         } catch (Exception e) {
+            /* This catch block is just to catch any and all exceptions, then reports where the error took place*/
             String[] errorMessage = {
-                String.format("[%s ERROR @ %s]",errorStep.get("severity"), errorStep.get("step"))};
+                String.format("[%s ERROR @ %s]",errorStep.get("severity").toUpperCase(), errorStep.get("step"))};
             log.error(Arrays.stream(errorMessage).collect(Collectors.joining(System.lineSeparator())));
-//            Platform.runLater(() -> view.setStatus("Connection failed: " + e.getMessage()
-//                    + "  (Is the server running?)"));
         }
     }
 
