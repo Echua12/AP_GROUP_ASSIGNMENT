@@ -22,6 +22,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+/***
+ * THIS CLASS IS INACTIVE, NOT IN USE, BLAH BLAH BLAH, IT IS STILL AROUND JUST FOR REFERENCE
+ */
+
 /**
  * The reference UI. It deliberately covers the three things students must understand, then stops:
  * <ol>
