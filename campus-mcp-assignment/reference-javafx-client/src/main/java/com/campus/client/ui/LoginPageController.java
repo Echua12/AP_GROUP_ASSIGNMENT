@@ -10,17 +10,41 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-//unsure if i need these :(
-//import java.net.URL;
-//import java.util.ResourceBundle;
-//import javafx.fxml.Initializable;
+import com.campus.client.mcp.CampusMcpClient;
 
-/**
- * FXML Controller class
- *
- * @author User
- */
-public class LoginPageController {
+//unsure if i need these :(
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.function.Supplier;
+import javafx.fxml.Initializable;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+
+/*****************************************
+*   MODUS OPERANDI
+*   1. Validates input
+*   2. Verify Student login:
+*       2.1 Connects with the MCP server (request for students.txt)
+*       2.2 Compiles entries from students.txt into a map or something
+*       2.3 Looks through student ids and matches with the student id and password
+*       2.4 Invoke setRoot("dashboard")
+*   3. Incorrect Login details
+*       3.1 display "incorrect login details"
+*       3.2 clear the textfields
+*       3.3 return to this loginpage
+**************************************
+*/
+public class LoginPageController implements Initializable {
+    private static CampusMcpClient mcp;
+    
+    /*****************************************
+    *   FXML event handlers and   
+    * 
+    * 
+    **************************************
+    */
+    
     @FXML
     TextField studentIdInput, studentPasswordInput;
     @FXML
@@ -28,29 +52,77 @@ public class LoginPageController {
     @FXML   
     Label errorLabel;
     
-    
-    @FXML
-    public void loginClick(ActionEvent event) {
-        /*  
-            1. Validates input
-            2. Verify Student login:
-                2.1 Connects with the MCP server (request for student.txt)
-                2.2 Compiles entries from student.txt into a map or something
-                2.3 Looks through student ids and matches with the student id and password
-                2.4 Invoke setRoot("dashboard")
-            3. Incorrect Login details
-                3.1 display "incorrect login details"
-                3.2 clear the textfields
-                3.3 return to this loginpage
-        */
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        studentIdInput.setPromptText("Student ID...");
+        studentPasswordInput.setPromptText("Student Account Password...");
         
-        if (verifyLogin()) {
-//            App.switchMainScreensOnButtonPress((Button)event.getSource());
-        }
+        /**
+         *  Check if the connection was actually successful
+         * 
+         */
+        
+        /**
+         *  Setting Login Button's action, will contain the entirety of the input validation and 
+         *  the getting of the student data, as well as the password and id matching (student account verification)
+         */
+        loginButton.setOnAction(e -> {
+            /**************************** Input Validator ****************************/
+            List<String> errorMessage = new ArrayList<>();
+            Supplier<String> idSupplier = (studentIdInput.getText().isEmpty()) ? 
+                    () -> {
+                        errorMessage.add("student id");
+                        return null;
+                    } 
+                    : 
+                    () -> {
+                        return studentIdInput.getText();
+                    };
+            String studentIdStr = idSupplier.get();
+            Supplier<String> passwordSupplier = (studentPasswordInput.getText().isEmpty()) ?
+                    () -> {
+                        errorMessage.add("student account password");
+                        return null;
+                    }
+                    :
+                    () -> {
+                        return studentPasswordInput.getText();
+                    };
+            String studentPasswordStr = passwordSupplier.get();
+            
+            if (studentIdStr == null || studentPasswordStr == null) {
+                setErrorLabel("Please insert your " + String.join(" and ", errorMessage));
+                return;
+            }
+            
+            
+            
+            /**************************** Student Login Detail Verifier ****************************/
+            /* create daemon (background) thread, adding a lambda function where a Thread object is created and returned in allows the daemon to close automatically */
+            /**
+             *  IMPORTANT TO NOTE:
+             *  
+             *  Anything that is mcp or server related, like callTools, or readResources must be place into a callable that is ran by a daemon thread
+             *  This is to prevent the application from hanging if the main application has to literally wait for a response from the server
+             *  ( <*> doesn't cut out the actual waiting time tho, just makes sure that the user can still interact with the UI whilst waiting for a response)
+             */
+            ExecutorService studentDataStoreWorker = Executors.newSingleThreadExecutor((runnable) -> { //"runnable" is the runnable object that is passed (using submit(runnable))
+                Thread thread = new Thread(runnable, "student-datastore-worker");
+                thread.setDaemon(true);
+                return thread;
+            });
+            
+            studentDataStoreWorker.submit(() -> {
+                try { //try-catch statement in the case that something in the mcp fails midway through
+                    
+                }
+            })
+            
+        });
         
     }
     
-    public void loginFailedScreen(String message) {
+    public void setErrorLabel(String message) {
         errorLabel.setText(message);
         
     }
@@ -59,39 +131,46 @@ public class LoginPageController {
     ///LOGIC
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    public boolean verifyLogin() { //returns true if login was successful
-        //Validates input
-        //Verifies student login
-        //returns true or based on its status
-        
-        //NOTE: Has the power to invoke error screens
-        
-        String id = "";
-        String password = "";
-        
-        if (studentIdInput.getText().isEmpty()) {
-            //display "missing student id"
-            loginFailedScreen("Please input your Taylor's Student ID");
-        } else if (studentPasswordInput.getText().isEmpty()) {
-            loginFailedScreen("Please input your Student Account Password");
-        } else {
-            id = studentIdInput.getText().toLowerCase();
-            password = studentPasswordInput.getText().toLowerCase();
-        }
-            
-        Map<String, String> studentIdsAndPasswords = new HashMap<>(); //get the MCP server student details, and store them here
-        
-        String[] studentIds = (String[]) studentIdsAndPasswords.keySet().toArray();
-        for (int i = 0; i < studentIdsAndPasswords.size(); i++) {
-            if (id.equals(studentIds[i].toLowerCase()) && password.equals(studentIdsAndPasswords.get(studentIds[i]))) {
-                return true;
-            }
-        }
-        
-        loginFailedScreen("Incorrect Student ID or Password");
-        return false;
-    }
+//    public boolean verifyLogin() { //returns true if login was successful
+//        //Validates input
+//        //Verifies student login
+//        //returns true or based on its status
+//        
+//        //NOTE: Has the power to invoke error screens
+//        
+//        String id = "";
+//        String password = "";
+//        
+//        if (studentIdInput.getText().isEmpty()) {
+//            //display "missing student id"
+//            loginFailedScreen("Please input your Taylor's Student ID");
+//        } else if (studentPasswordInput.getText().isEmpty()) {
+//            loginFailedScreen("Please input your Student Account Password");
+//        } else {
+//            id = studentIdInput.getText().toLowerCase();
+//            password = studentPasswordInput.getText().toLowerCase();
+//        }
+//            
+//        Map<String, String> studentIdsAndPasswords = new HashMap<>(); //get the MCP server student details, and store them here
+//        
+//        String[] studentIds = (String[]) studentIdsAndPasswords.keySet().toArray();
+//        for (int i = 0; i < studentIdsAndPasswords.size(); i++) {
+//            if (id.equals(studentIds[i].toLowerCase()) && password.equals(studentIdsAndPasswords.get(studentIds[i]))) {
+//                return true;
+//            }
+//        }
+//        
+//        loginFailedScreen("Incorrect Student ID or Password");
+//        return false;
+//    }
     
+    /**
+     * Simply gets the reference of the mcp (after connection during runtime)
+     * 
+     */
+    public static void bind(CampusMcpClient mcp) {
+        LoginPageController.mcp = mcp;
+    }
     
     
 }

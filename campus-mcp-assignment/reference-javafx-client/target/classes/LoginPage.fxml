@@ -38,7 +38,7 @@
                </children>
             </HBox>
             <Label fx:id="errorLabel" text=" " textFill="RED" />
-            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#loginClick" text="Log in" />
+            <Button fx:id="loginButton" mnemonicParsing="false" text="Log in" />
             <VBox alignment="CENTER" prefHeight="163.0" prefWidth="615.0">
                <children>
                   <Label text="If you have forgotten your Student Account ID or Student Account Password, please contact campus central via" textFill="#5797ff" />

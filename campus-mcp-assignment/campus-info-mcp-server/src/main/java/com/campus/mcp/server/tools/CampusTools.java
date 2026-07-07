@@ -234,6 +234,81 @@ public final class CampusTools {
                 })
                 .build();
     }
+    
+    
+    // 6. Student related tools (addNewStudent ("add_new_student"), getStudentDataById ("get_student_data"), getAllStudentId ("get_student_ids"))
+    
+    /**
+     *  THIS SHOULD HAVE NO ERRORS
+     */
+    private SyncToolSpecification addNewStudent() {
+        String schema = """
+            {
+              "type": "object",
+              "properties": {
+                "password": { "type": "string" },
+                "fname":  { "type": "string" },
+                "mname":    { "type": "string" },
+                "lname":    { "type": "string" }
+              },
+              "required": ["password", "fname"]
+            }
+            """;
+        return SyncToolSpecification.builder()
+                .tool(Tool.builder()
+                        .name("add_new_student")
+                        .description("Add a student to students.txt. Returns the studentId of the added Student")
+                        .inputSchema(jsonMapper, schema)
+                        .build())
+                .callHandler((exchange, request) -> {
+                    //has sender-message (whatever you execute from the DataStore) and return-message (whatever you wish to return through text(String) )
+                    Map<String, Object> args = request.arguments(); //ABSOLUTELY NECESSARY, REQUIRED TO GEt THE ARGUMENTS PASSED BY THE CLIENT TO THE SERVER
+                    /**
+                     *  The block underneath basically calls the DataStore method defined in DataStore.java
+                     * 
+                     */
+                    String studentId = dataStore.addStudent(
+                            str(args, "password"),
+                            str(args, "fname"),
+                            str(args, "mname"), //str already returns an empty String if this attribute is missing
+                            str(args, "lname")  //str already returns an empty String if this attribute is missing
+                    );
+                    
+                    //text MUST take a string
+                    return text(studentId);
+                    
+                }).build();
+    }
+    
+    private SyncToolSpecification getStudentDataById() {
+        String schema = """
+            {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" }
+              },
+              "required": ["id"]
+            }
+            """;
+        
+        return SyncToolSpecification.builder()
+                .tool(Tool.builder()
+                        .name("get_student_data")
+                        .description("Get a student from the students.txt. Returns the {password, fname, mname, lname}")
+                        .inputSchema(jsonMapper, schema)
+                        .build())
+                .callHandler((exchange, request) -> {
+                    Map<String, Object> args = request.arguments();
+                    String studentData = String.join(" | ", dataStore.getStudentDataById(str(args, "id")));
+                    studentData = (studentData == null) ? 
+                            String.format("NO STUDENT OF ID %s FOUND IN students.txt", str(args, "id"))
+                            :
+                            studentData;
+                    
+                    return text(studentData);
+                })
+                .build();
+    }
 
     // ---- helpers ----------------------------------------------------------
 

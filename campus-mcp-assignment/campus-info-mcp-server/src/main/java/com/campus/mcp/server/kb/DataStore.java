@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.*;
 
 /**
  * Persists mutable campus data (bookings, leave applications) to plain text files in a
@@ -27,19 +28,26 @@ public final class DataStore {
     private final Path dataDir;
     private final Path bookingsFile;
     private final Path leaveFile;
+    private final Path studentsFile;
     private final AtomicInteger bookingSeq = new AtomicInteger(0);
     private final AtomicInteger leaveSeq = new AtomicInteger(0);
-
+    private final AtomicInteger studentsSeq = new AtomicInteger(0);
+    
     public DataStore(Path dataDir) {
         this.dataDir = dataDir;
         this.bookingsFile = dataDir.resolve("bookings.txt");
         this.leaveFile = dataDir.resolve("leave_applications.txt");
+        this.studentsFile = dataDir.resolve("students.txt"); //the students' login information
         init();
     }
 
     private void init() {
         try {
             Files.createDirectories(dataDir);
+            /**
+             *  Create your file-data structure here
+             *  
+             **/
             if (Files.notExists(bookingsFile)) {
                 Files.writeString(bookingsFile,
                         "# ref | resourceId | date | start | end | studentId | createdAt\n");
@@ -48,9 +56,15 @@ public final class DataStore {
                 Files.writeString(leaveFile,
                         "# ref | studentId | fromDate | toDate | reason | createdAt\n");
             }
+            if(Files.notExists(studentsFile)) {
+                Files.writeString(studentsFile,
+                        "# ref | studentPassword | studentFName | studentMName | studentLName\n");
+            }
+            
             // Seed sequence numbers from existing line counts so refs stay unique across restarts.
             bookingSeq.set(countDataLines(bookingsFile));
             leaveSeq.set(countDataLines(leaveFile));
+            studentsSeq.set(countDataLines(studentsFile));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -87,6 +101,58 @@ public final class DataStore {
         append(leaveFile, line);
         return ref;
     }
+    
+    
+    /**
+     *  There should be no such thing as a "duplicate" student (student data with duplicate studentids), as AtomicInteger will deal with the student IDs for us
+     * 
+     */
+    public synchronized String addStudent(String studentPassword, String studentFName, String studentMName, String studentLName) {
+        String studentId = "S-" + (studentsSeq.incrementAndGet());
+        String dataLine = String.join("|", studentId, studentPassword, studentFName, studentMName, studentLName);
+        append(studentsFile, dataLine);
+        return studentId;
+        
+    }
+    
+    /**
+     *  returns an arraylist of student id Strings
+     *  (ARRAYLIST CAN BE EMPTY)
+     * 
+     */
+//    public synchronized List<String> getStudentIds() {
+//        List<String> studentIds = new ArrayList<>();
+//        for (String line : readDataLines(studentsFile)) { //readDataLines returns the 
+//            String[] parts = line.split("\\s*\\|\\s*"); //stores the data separated into "parts" by " | " delimiters
+//            studentIds.add(parts[0]);
+//        }
+//        return studentIds;
+//    }
+    
+    /**
+     * returns a map of the entire row of that studentId
+     * (MAP CANNOT BE EMPTY)
+     */
+    public synchronized List<String> getStudentDataById(String studentId) {
+        List<String> studentDataMap = null;
+        for (String line : readDataLines(studentsFile)) {
+            String[] parts = line.split("\\s*\\|\\s*");
+            if (parts[0].equalsIgnoreCase(studentId)) continue;
+            //there should only be one instance of a student data row with the studentId
+            //mapping here
+            studentDataMap = new ArrayList<>(List.of(
+                    parts[0],
+                    parts[1],
+                    parts[2],
+                    parts[3],
+                    parts[4]
+                    
+            ));
+        }
+        
+        
+        return studentDataMap; //if the map is empty, that means the studentId row in students.txt couldn't be found, hence, a null is returned
+    }
 
     // ---- low-level file helpers -----------------------------------------
 
@@ -112,7 +178,7 @@ public final class DataStore {
             throw new UncheckedIOException(e);
         }
     }
-
+    
     private int countDataLines(Path file) {
         return readDataLines(file).size();
     }
